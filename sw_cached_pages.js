@@ -10,14 +10,15 @@ const cacheAssets = [
   "/js/main.js",
 ];
 
-// Install Event (after registering Event is triggered)
+// 1. Install Event (after registering Event is triggered)
+
 // When a browser runs a service worker for the first time, an install event is fired within it.
 // The install event is the perfect place to save things to the cache.
 // The following code will run when the install event is fired.
 // It will wait until all of the the pages
-// (main page "/" "index.html", "about.html", "/css/style.css", "/js/main.js",) get added to the cache.
+// (main page "/" "index.html", "about.html", "/css/style.css", "/js/main.js",) gets added to the cache.
 self.addEventListener("install", (e) => {
-  console.log("Service worker Installed", e);
+  console.log("Service worker Installing", e);
   // Wait until all promises are resolved. The service worker won't be installed until then.
   e.waitUntil(
     caches
@@ -30,7 +31,8 @@ self.addEventListener("install", (e) => {
   );
 });
 
-// Activate Event (after registering Event and install event is triggered)
+// 2. Activate Event (after registering Event and install event is triggered)
+
 // The activate event will fire when the install event is complete and the service worker
 // is activating at this point but it's not controlling any pages.
 
@@ -69,7 +71,9 @@ self.addEventListener("fetch", function (event) {
   event.respondWith(
     // Serach all chache for a request URL that matches the one served up from the fetch.
     caches.match(event.request).then(function (response) {
-      // If a response exists return that, otherwise return fetch(event.request). Since fetch returns a promise, it's ok to return that because it's a promise within a promise. The || operator is the OR operator. If the first statemnt is true it stops running, if it's not it goes to check the next statement.
+      // If a response exists return that, otherwise return fetch(event.request).
+      // Since fetch returns a promise, it's ok to return that because it's a promise within a promise. The || operator is the OR operator.
+      // If the first statemnt is true it stops running, if it's not it goes to check the next statement.
       return response || fetch(event.request);
     })
   );
